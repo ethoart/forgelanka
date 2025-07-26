@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Forge Lanka</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e7eb; /* gray-200 */
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #f97316, #ec4899, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .glass-effect {
+            background: rgba(17, 24, 39, 0.5);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #header {
+            background: rgba(10, 10, 10, 0.7);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Gallery Filter Buttons */
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background: linear-gradient(90deg, #f97316, #ec4899, #06b6d4);
+            color: white;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+        }
+
+        /* Gallery Item Styling & Animation */
+        .gallery-item {
+            position: relative;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+        .gallery-item > div { /* The container for image and overlay */
+            aspect-ratio: 16 / 9;
+        }
+        .gallery-item > div img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .gallery-item .overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0,0,0,0.7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+        }
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Lightbox Modal */
+        #lightbox {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        #lightbox img, #lightbox iframe {
+            max-width: 90%;
+            max-height: 80%;
+            box-shadow: 0 0 40px rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+        #lightbox iframe {
+            width: 80vw;
+            height: 45vw; /* 16:9 aspect ratio */
+        }
+        .close-lightbox {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-black/95">
+
+    <!-- Header / Navigation -->
+    <header id="header" class="sticky top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html">
+                    <img src="D:\forge website\image\Logo-4.1.png">
+                </a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html#about" class="text-gray-300 hover:gradient-text transition-all duration-300 font-medium">About</a>
+                    <a href="index.html#services" class="text-gray-300 hover:gradient-text transition-all duration-300 font-medium">Services</a>
+                    <a href="gallery.html" class="gradient-text transition-all duration-300 font-bold">Work</a>
+                    <a href="index.html#contact" class="text-gray-300 hover:gradient-text transition-all duration-300 font-medium">Contact</a>
+                </nav>
+                <a href="index.html#contact" class="hidden md:block glass-effect text-gray-50 hover:bg-gray-50 hover:text-gray-900 transition-all duration-300 font-bold py-2 px-6 rounded-lg">
+                    Contact Us
+                </a>
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden glass-effect">
+            <a href="index.html#about" class="block text-center py-3 px-6 text-gray-300 hover:gradient-text transition-all duration-300 font-medium">About</a>
+            <a href="index.html#services" class="block text-center py-3 px-6 text-gray-300 hover:gradient-text transition-all duration-300 font-medium">Services</a>
+            <a href="gallery.html" class="block text-center py-3 px-6 gradient-text font-bold">Work</a>
+            <a href="index.html#contact" class="block text-center py-3 px-6 text-gray-300 hover:gradient-text transition-all duration-300 font-medium">Contact</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-16 md:py-24">
+        
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter">Our <span class="gradient-text">Gallery</span></h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-400">A showcase of our passion, creativity, and commitment to excellence across various domains.</p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div id="filter-container" class="flex flex-wrap justify-center gap-3 md:gap-4 mb-16">
+            <button class="filter-btn active glass-effect text-white font-semibold py-2 px-6 rounded-full" data-filter="all">All</button>
+            <button class="filter-btn glass-effect text-white font-semibold py-2 px-6 rounded-full" data-filter="designs">Designs</button>
+            <button class="filter-btn glass-effect text-white font-semibold py-2 px-6 rounded-full" data-filter="photography">Photography</button>
+            <button class="filter-btn glass-effect text-white font-semibold py-2 px-6 rounded-full" data-filter="video">Video</button>
+            <button class="filter-btn glass-effect text-white font-semibold py-2 px-6 rounded-full" data-filter="events">Events</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Item 1: Design -->
+            <div class="gallery-item" data-category="designs" data-type="image" data-source="https://placehold.co/1280x720/111827/06B6D4?text=Brand+Identity" data-title="Brand Identity">
+                <div class="group block overflow-hidden rounded-xl border border-gray-800 cursor-pointer">
+                    <img src="https://placehold.co/800x450/111827/06B6D4?text=Brand+Identity" alt="Design 1" class="w-full h-full object-cover">
+                    <div class="overlay"><h3 class="font-bold text-lg">Brand Identity</h3><p class="text-sm text-gray-300">Strategy & Visuals</p><svg class="w-10 h-10 mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                </div>
+            </div>
+            <!-- Item 2: Photography -->
+            <div class="gallery-item" data-category="photography" data-type="image" data-source="https://placehold.co/1280x720/111827/EC4899?text=Product+Shoot" data-title="Product Shoot">
+                <div class="group block overflow-hidden rounded-xl border border-gray-800 cursor-pointer">
+                    <img src="https://placehold.co/800x450/111827/EC4899?text=Product+Shoot" alt="Photography 1" class="w-full h-full object-cover">
+                     <div class="overlay"><h3 class="font-bold text-lg">Product Shoot</h3><p class="text-sm text-gray-300">E-commerce Campaign</p><svg class="w-10 h-10 mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                </div>
+            </div>
+            <!-- Item 3: Video -->
+            <div class="gallery-item" data-category="video" data-type="video" data-source="https://www.youtube.com/embed/c8gtgEPDcXI?si=WwGFAuAQFEPtcp2d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" data-title="TV Commercial">
+                <div class="group block overflow-hidden rounded-xl border border-gray-800 cursor-pointer">
+                    <img src="D:\forge website\image\Screenshot 2025-07-26 141337.png" alt="Video 1" class="w-full h-full object-cover">
+                     <div class="overlay"><h3 class="font-bold text-lg">BYD Commercial</h3><p class="text-sm text-gray-300">BYD Srilanka</p><svg class="w-10 h-10 mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                </div>
+            </div>
+            <!-- Item 4: Event -->
+            <div class="gallery-item" data-category="events" data-type="image" data-source="https://placehold.co/1280x720/111827/8B5CF6?text=Conference+Stream" data-title="Conference Stream">
+                <div class="group block overflow-hidden rounded-xl border border-gray-800 cursor-pointer">
+                    <img src="https://placehold.co/800x450/111827/8B5CF6?text=Conference+Stream" alt="Event 1" class="w-full h-full object-cover">
+                    <div class="overlay"><h3 class="font-bold text-lg">Conference Stream</h3><p class="text-sm text-gray-300">Live Production</p><svg class="w-10 h-10 mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                </div>
+            </div>
+            <!-- Item 5: Design -->
+            <div class="gallery-item" data-category="designs" data-type="image" data-source="https://placehold.co/1280x720/111827/06B6D4?text=UI/UX+Design" data-title="UI/UX Design">
+                 <div class="group block overflow-hidden rounded-xl border border-gray-800 cursor-pointer">
+                    <img src="https://placehold.co/800x450/111827/06B6D4?text=UI/UX+Design" alt="Design 2" class="w-full h-full object-cover">
+                    <div class="overlay"><h3 class="font-bold text-lg">UI/UX Design</h3><p class="text-sm text-gray-300">Mobile Application</p><svg class="w-10 h-10 mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                </div>
+            </div>
+            <!-- Item 6: Photography -->
+            <div class="gallery-item" data-category="photography" data-type="image" data-source="https://placehold.co/1280x720/111827/EC4899?text=Fashion+Shoot" data-title="Fashion Shoot">
+                <div class="group block overflow-hidden rounded-xl border border-gray-800 cursor-pointer">
+                    <img src="https://placehold.co/800x450/111827/EC4899?text=Fashion+Shoot" alt="Photography 2" class="w-full h-full object-cover">
+                     <div class="overlay"><h3 class="font-bold text-lg">Fashion Shoot</h3><p class="text-sm text-gray-300">Editorial Campaign</p><svg class="w-10 h-10 mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox">
+        <span class="close-lightbox">&times;</span>
+        <div id="lightbox-content"></div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="bg-black mt-16">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <p class="text-gray-500">&copy; 2024 Forge Lanka (Pvt) Ltd. All Rights Reserved.</p>
+                <div class="flex mt-4 md:mt-0 space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors duration-300">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+                const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
+                for (let link of mobileMenuLinks) {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                }
+            }
+
+            // --- Gallery Filtering and Animation ---
+            const filterContainer = document.getElementById('filter-container');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            // Intersection Observer for initial fade-in
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            galleryItems.forEach(item => observer.observe(item));
+
+            if (filterContainer) {
+                filterContainer.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'BUTTON') {
+                        // Style active button
+                        filterContainer.querySelector('.active').classList.remove('active');
+                        e.target.classList.add('active');
+
+                        const filterValue = e.target.getAttribute('data-filter');
+
+                        galleryItems.forEach(item => {
+                            // Hide item first for animation
+                            item.classList.remove('is-visible');
+                            
+                            setTimeout(() => {
+                                const itemCategory = item.getAttribute('data-category');
+                                if (filterValue === 'all' || filterValue === itemCategory) {
+                                    item.style.display = 'block';
+                                    // Trigger reflow to restart animation
+                                    void item.offsetWidth; 
+                                    item.classList.add('is-visible');
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            }, 400); // Match transition duration
+                        });
+                    }
+                });
+            }
+
+            // --- Lightbox Functionality ---
+            const lightbox = document.getElementById('lightbox');
+            const lightboxContent = document.getElementById('lightbox-content');
+            const closeBtn = document.querySelector('.close-lightbox');
+
+            if (lightbox) {
+                document.getElementById('gallery-grid').addEventListener('click', (e) => {
+                    const galleryItem = e.target.closest('.gallery-item');
+                    if (galleryItem) {
+                        const type = galleryItem.dataset.type;
+                        const source = galleryItem.dataset.source;
+                        
+                        if (type === 'image') {
+                            lightboxContent.innerHTML = `<img src="${source}" alt="">`;
+                        } else if (type === 'video') {
+                            // UPDATED: Added autoplay, mute, and rel=0 parameters for better video playback.
+                            lightboxContent.innerHTML = `<iframe src="${source}?autoplay=1&mute=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                        }
+                        
+                        lightbox.classList.add('active');
+                    }
+                });
+
+                closeBtn.addEventListener('click', () => {
+                    lightbox.classList.remove('active');
+                    lightboxContent.innerHTML = ''; // Clear content to stop videos
+                });
+
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        lightbox.classList.remove('active');
+                        lightboxContent.innerHTML = '';
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

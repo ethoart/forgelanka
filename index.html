@@ -102,35 +102,84 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Logo Scroller */
-        .logo-scroller {
+        /* Logo Scroller - UPDATED FOR GLITCH-FREE SCROLL */
+        .scroller {
             overflow: hidden;
-            position: relative;
-            -webkit-mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
-            mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+            -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+            mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
         }
-        .logo-scroller-inner {
+        .scroller__inner {
+            padding-block: 1rem;
             display: flex;
-            width: fit-content;
-            animation: scroll 40s linear infinite;
+            flex-wrap: nowrap;
+            gap: 2rem; /* Replaces margin on images */
         }
-        .logo-scroller-inner img {
+        .scroller[data-animated="true"] .scroller__inner {
+             width: max-content;
+             flex-wrap: nowrap;
+             animation: scroll var(--_animation-duration, 40s) var(--_animation-direction, forwards) linear infinite;
+        }
+        .scroller__inner img {
             height: 60px;
-            margin: 0 40px;
-            filter: grayscale(1) brightness(1.5);
-            transition: filter 0.3s;
+            transition: transform 0.3s;
         }
-        .logo-scroller-inner:hover {
+        .scroller__inner:hover {
             animation-play-state: paused;
         }
-         .logo-scroller-inner img:hover {
-            filter: grayscale(0) brightness(1);
-         }
+        .scroller__inner img:hover {
+            transform: scale(1.1);
+        }
 
         @keyframes scroll {
             to {
-                transform: translateX(calc(-50%));
+                transform: translate(calc(-50% - 1rem)); /* -50% for half the track, -1rem for half the gap */
             }
+        }
+        
+        /* Old Type Logo Animation */
+        .logo-container {
+            position: relative;
+            display: inline-block;
+        }
+        .logo-container > img {
+            transition: transform 0.1s;
+        }
+        .logo-container:hover > img {
+            animation: main-glitch 0.3s linear;
+        }
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://storage.googleapis.com/gemini-prod-us-west1-447555375329/uploads/2024/07/22/a334b5b3769c279cbe87f94080a2542a/Logo-4.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0;
+            mix-blend-mode: screen;
+            transition: opacity 0.2s;
+        }
+        .logo-container:hover::after {
+            animation: side-glitch 0.3s linear;
+            background-color: #ff00ff; /* Magenta part of glitch */
+            opacity: 0.5;
+        }
+        @keyframes main-glitch {
+            0% { transform: skewX(0); }
+            25% { transform: skewX(-5deg); }
+            50% { transform: skewX(5deg); }
+            75% { transform: skewX(-2deg); }
+            100% { transform: skewX(0); }
+        }
+        @keyframes side-glitch {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-3px, -2px); }
+            40% { transform: translate(3px, 2px); }
+            60% { transform: translate(-3px, 2px); }
+            80% { transform: translate(3px, -2px); }
+            100% { transform: translate(0, 0); }
         }
     </style>
 </head>
@@ -142,7 +191,7 @@
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <a href="#" class="flex items-center">
-                    <img src="https://storage.googleapis.com/gemini-prod-us-west1-447555375329/uploads/2024/07/22/a334b5b3769c279cbe87f94080a2542a/Logo-4.png" alt="Forge Lanka Logo" class="h-10 md:h-12" onerror="this.onerror=null;this.src='https://placehold.co/200x50/000000/FFFFFF?text=FORGE+LANKA';">
+                    <img src="D:\forge website\image\Logo-4.1.png">
                 </a>
 
                 <!-- Desktop Navigation -->
@@ -197,7 +246,32 @@
                 </div>
             </div>
         </section>
-
+  <!-- Clients Section -->
+        <section id="clients" class="py-20 md:py-32 fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold">Trusted by Industry Leaders</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-400">We're proud to have collaborated with some of the best brands in Sri Lanka and beyond.</p>
+                </div>
+                <!-- UPDATED SCROLLER HTML -->
+                <div class="scroller" data-speed="slow">
+                    <ul class="tag-list scroller__inner">
+                        <img src="D:\forge website\image\images.png" alt="Unilever Logo">
+                        <img src="D:\forge website\image\byd-logo-png_seeklogo-496457.png" alt="BYD Logo">
+                        <img src="D:\forge website\image\m5tgoFCuGVmj6isBSWfNXZ.jpg" alt="Coca-Cola Logo">
+                        <img src="D:\forge website\image\white1.png" alt="Molly Logo">
+                        <img src="D:\forge website\image\Elephant_House_logo.png" alt="Elephent House Logo">
+                        <img src="D:\forge website\image\Commercial_Bank_logo.svg" alt="Commercial Bank Logo">
+                        <img src="D:\forge website\image\sony-logo-png_seeklogo-129420.png" alt="Sony Logo">
+                        <img src="D:\forge website\image\96356d24870979.5633b7137e7ae.jpg" alt="Spa ceyloan Logo">
+                        <img src="D:\forge website\image\images (1).png" alt="Port City Logo">
+                        <img src="D:\forge website\image\SLIIT_Logo_Crest.png" alt="SLIIT Logo">
+                        <img src="D:\forge website\image\Wickramarachchi-Opticians.jpg" alt="Wicramarachchi Logo">
+                        <img src="D:\forge website\image\images (2).png" alt="st.gorge Logo">
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- About Section -->
         <section id="about" class="py-20 md:py-32 fade-in-section">
             <div class="container mx-auto px-6">
@@ -213,7 +287,7 @@
                     </div>
                     <div class="order-1 md:order-2">
                          <div class="p-2 border-2 border-dashed rounded-xl gradient-border">
-                            <img src="https://placehold.co/600x400/111827/4BC0C8?text=Creative+Team" alt="Creative team at work" class="rounded-lg w-full">
+                            <img src="D:\forge website\image\teamm.jpg" alt="Creative team at work" class="rounded-lg w-full">
                          </div>
                     </div>
                 </div>
@@ -256,7 +330,7 @@
             </div>
         </section>
 
-        <!-- Work Section -->
+         <!-- Work Section -->
         <section id="work" class="py-20 md:py-32 fade-in-section">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
@@ -266,89 +340,140 @@
                 <div class="grid md:grid-cols-2 gap-8">
                     <a href="#" class="group block overflow-hidden rounded-xl border border-gray-800">
                         <div class="relative">
-                            <img src="https://placehold.co/800x600/111827/EC4899?text=Project+Alpha" alt="Project Alpha" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <img src="D:\forge website\image\bydim.jpg" alt="Project Alpha" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                             <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all duration-300"></div>
                         </div>
                         <div class="p-6 bg-gray-900/50">
-                            <h3 class="text-xl font-bold">Project Alpha</h3>
-                            <p class="text-gray-400 mt-1">Brand Identity & Launch Campaign</p>
+                            <h3 class="text-xl font-bold">BYD Srilanka</h3>
+                            <p class="text-gray-400 mt-1">Photography & videography</p>
                         </div>
                     </a>
                     <a href="#" class="group block overflow-hidden rounded-xl border border-gray-800">
                         <div class="relative">
-                            <img src="https://placehold.co/800x600/111827/06B6D4?text=Project+Beta" alt="Project Beta" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <img src="D:\forge website\image\tiara.jpg" alt="Project Beta" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                             <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all duration-300"></div>
                         </div>
                         <div class="p-6 bg-gray-900/50">
-                            <h3 class="text-xl font-bold">Project Beta</h3>
-                            <p class="text-gray-400 mt-1">TV Commercial Production</p>
+                            <h3 class="text-xl font-bold">Tiara (CBL)</h3>
+                            <p class="text-gray-400 mt-1">Photography & videography</p>
                         </div>
+                    </a>
+                     <a href="#" class="group block overflow-hidden rounded-xl border border-gray-800">
+                        <div class="relative">
+                            <img src="D:\forge website\image\molly12.jpg" alt="Project Gamma" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all duration-300"></div>
+                        </div>
+                        <div class="p-6 bg-gray-900/50">
+                            <h3 class="text-xl font-bold">Molly Fashion Circule</h3>
+                            <p class="text-gray-400 mt-1">Digital Experience & Social Media</p>
+                        </div>
+                    </a>
+                    <a href="#" class="group block overflow-hidden rounded-xl border border-gray-800">
+                        <div class="relative">
+                            <img src="D:\forge website\image\cocacola.JPG" alt="Project Delta" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all duration-300"></div>
+                        </div>
+                        <div class="p-6 bg-gray-900/50">
+                            <h3 class="text-xl font-bold">Coca-Cola Srilanka</h3>
+                            <p class="text-gray-400 mt-1">Photography & videography</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="text-center mt-16">
+                    <a href="/forge%20website/gallery.html" class="glass-effect text-gray-200 font-bold py-3 px-8 rounded-lg hover:bg-gray-700/50 transition-colors duration-300">
+                        View Full Gallery
                     </a>
                 </div>
             </div>
         </section>
-
-        <!-- Clients Section -->
-        <section id="clients" class="py-20 md:py-32 fade-in-section">
+         <!-- Contact Section -->
+        <section id="contact" class="py-20 md:py-32 bg-black/20 section-glow fade-in-section">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold">Trusted by Industry Leaders</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-gray-400">We're proud to have collaborated with some of the best brands in Sri Lanka and beyond.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold">Get In <span class="gradient-text">Touch</span></h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-400">Ready to start a project or just want to say hi? We'd love to hear from you.</p>
                 </div>
-                <div class="logo-scroller">
-                    <div class="logo-scroller-inner">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Unilever_logo.svg/2560px-Unilever_logo.svg.png" alt="Unilever Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/BYD_Auto_logo.svg/1280px-BYD_Auto_logo.svg.png" alt="BYD Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Coca-Cola_logo.svg/2560px-Coca-Cola_logo.svg.png" alt="Coca-Cola Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Nestle_logo.svg/2560px-Nestle_logo.svg.png" alt="Nestle Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Dialog_Axiata_logo.svg/2560px-Dialog_Axiata_logo.svg.png" alt="Dialog Axiata Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5f/John_Keells_Holdings_logo.svg/1200px-John_Keells_Holdings_logo.svg.png" alt="John Keells Holdings Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Mas_Holdings_Logo.svg/2560px-Mas_Holdings_Logo.svg.png" alt="MAS Holdings Logo">
-                        <!-- Duplicate logos for seamless scroll -->
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Unilever_logo.svg/2560px-Unilever_logo.svg.png" alt="Unilever Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/BYD_Auto_logo.svg/1280px-BYD_Auto_logo.svg.png" alt="BYD Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Coca-Cola_logo.svg/2560px-Coca-Cola_logo.svg.png" alt="Coca-Cola Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Nestle_logo.svg/2560px-Nestle_logo.svg.png" alt="Nestle Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Dialog_Axiata_logo.svg/2560px-Dialog_Axiata_logo.svg.png" alt="Dialog Axiata Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5f/John_Keells_Holdings_logo.svg/1200px-John_Keells_Holdings_logo.svg.png" alt="John Keells Holdings Logo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Mas_Holdings_Logo.svg/2560px-Mas_Holdings_Logo.svg.png" alt="MAS Holdings Logo">
+
+                <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 glass-effect rounded-2xl p-8 md:p-12">
+                    <!-- Contact Info Column -->
+                    <div class="flex flex-col justify-center space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-4">Contact Information</h3>
+                            <p class="text-gray-400">Fill up the form and our Team will get back to you within 24 hours.</p>
+                        </div>
+                        <div class="space-y-6">
+                            <a href="tel:+94772681180" class="flex items-center group">
+                                <div class="glass-effect rounded-full p-3 mr-4 group-hover:bg-cyan-500/20 transition-colors">
+                                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-gray-300">Mobile Number</p>
+                                    <p class="text-white font-semibold text-lg group-hover:gradient-text transition-colors">+94 77 268 1180</p>
+                                </div>
+                            </a>
+                             <a href="https://wa.me/94719979966" target="_blank" class="flex items-center group">
+                                <div class="glass-effect rounded-full p-3 mr-4 group-hover:bg-green-500/20 transition-colors">
+                                   <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.655 4.398 1.908 6.161l.227.362-1.092 3.996 4.105-1.07.352.214z"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-gray-300">WhatsApp</p>
+                                    <p class="text-white font-semibold text-lg group-hover:text-green-400 transition-colors">+94 77 997 9966</p>
+                                </div>
+                            </a>
+                            <a href="mailto:info@forgelanka.lk" class="flex items-center group">
+                                <div class="glass-effect rounded-full p-3 mr-4 group-hover:bg-pink-500/20 transition-colors">
+                                    <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-gray-300">Business Mail</p>
+                                    <p class="text-white font-semibold text-lg group-hover:gradient-text transition-colors">info@forgelanka.lk</p>
+                                </div>
+                            </a>
+                            <a href="https://search.google.com/local/writereview?placeid=ChIJlFQRFpRamDkRZd_lCldLSUk" target="_blank" class="flex items-center group">
+                                <div class="glass-effect rounded-full p-3 mr-4 group-hover:bg-yellow-500/20 transition-colors">
+                                    <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-gray-300">Enjoying our work?</p>
+                                    <p class="text-white font-semibold text-lg group-hover:text-yellow-400 transition-colors">Review Us on Google</p>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-20 md:py-32 bg-black/20 fade-in-section">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold">Ready to start a project?</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-gray-400">Let's talk. Tell us about your next big idea.</p>
-                </div>
-                <div class="max-w-3xl mx-auto">
-                    <form action="#" method="POST" class="space-y-6">
-                        <div class="grid sm:grid-cols-2 gap-6">
+                    <!-- Contact Form Column -->
+                    <div>
+                         <form action="#" method="POST" class="space-y-6">
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
-                                <input type="text" name="name" id="name" class="w-full glass-effect rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400" required>
+                                <input type="text" name="name" id="name" placeholder="John Doe" class="w-full glass-effect rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all" required>
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
-                                <input type="email" name="email" id="email" class="w-full glass-effect rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400" required>
+                                <input type="email" name="email" id="email" placeholder="john.doe@example.com" class="w-full glass-effect rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all" required>
                             </div>
-                        </div>
-                        <div>
-                            <label for="message" class="block text-sm font-medium text-gray-400 mb-2">Message</label>
-                            <textarea name="message" id="message" rows="5" class="w-full glass-effect rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400" required></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="bg-gradient-to-r from-orange-500 via-pink-500 to-cyan-400 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity duration-300 text-lg">
-                                Send Message
-                            </button>
-                        </div>
-                    </form>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                                <textarea name="message" id="message" rows="5" placeholder="Tell us about your project..." class="w-full glass-effect rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all" required></textarea>
+                            </div>
+                            <div class="text-left">
+                                <button type="submit" class="bg-gradient-to-r from-orange-500 via-pink-500 to-cyan-400 text-white font-bold py-3 px-12 rounded-lg hover:opacity-90 transition-opacity duration-300 text-lg shadow-lg">
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Map Section -->
+                <div class="mt-20 md:mt-24">
+                     <h2 class="text-3xl font-bold mb-8 text-center">Find Us Here</h2>
+                     <div class="glass-effect rounded-2xl overflow-hidden p-2">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.316853247021!2d79.96114197475086!3d7.01481939290072!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2f97a5c5675e7%3A0x5a2cdf43243195e7!2sForge%20Lanka%20(PVT)%20Ltd!5e0!3m2!1sen!2slk!4v1722057913364!5m2!1sen!2slk" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-xl"></iframe>
+                     </div>
                 </div>
             </div>
         </section>
+
     </main>
 
     <!-- Footer -->
@@ -366,7 +491,8 @@
     </footer>
 
 
-    <script>
+
+   <script>
         // --- Mobile Menu Toggle ---
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -406,12 +532,34 @@
         sections.forEach(section => {
             observer.observe(section);
         });
+        
+        // --- Glitch-Free Scroller Script ---
+        const scrollers = document.querySelectorAll(".scroller");
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            addAnimation();
+        }
+
+        function addAnimation() {
+            scrollers.forEach((scroller) => {
+                scroller.setAttribute("data-animated", true);
+
+                const scrollerInner = scroller.querySelector(".scroller__inner");
+                const scrollerContent = Array.from(scrollerInner.children);
+
+                scrollerContent.forEach((item) => {
+                    const duplicatedItem = item.cloneNode(true);
+                    duplicatedItem.setAttribute("aria-hidden", true);
+                    scrollerInner.appendChild(duplicatedItem);
+                });
+            });
+        }
+
 
         // --- Three.js Hero Animation ---
         let scene, camera, renderer, particles;
         let mouseX = 0, mouseY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
 
         function initThree() {
             // Scene
@@ -479,6 +627,8 @@
         }
 
         function onWindowResize() {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -506,9 +656,12 @@
 
             renderer.render(scene, camera);
         }
-
-        initThree();
-        animate();
+        
+        // Ensure canvas exists before initializing
+        if (document.getElementById('hero-canvas')) {
+            initThree();
+            animate();
+        }
 
     </script>
 
